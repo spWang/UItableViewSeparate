@@ -1,8 +1,7 @@
 # UItableView+WWSeparate
     替代系统UItableView的分割线
 
-### 可以轻松设置分割线距离左边tableViewCell的间距, 当然也可以根据自己需要改源码
-### 用法:
+### 替代系统UItableView的分割线,也可以根据需要改默认设置
 ### 1.导入分类:
     #import "UITableViewCell+WWSeparate.h"
 ### 2.设置分割线:
