@@ -9,37 +9,45 @@
 #import "UITableViewCell+WWSeparate.h"
 #import <objc/runtime.h>
 
-@interface UITableViewCell()
+@interface UIView()
 @property (nonatomic, weak) UIView *lineView;
 @property (nonatomic, strong) NSLayoutConstraint *constraintLeft;
 @end
 
 
-@implementation UITableViewCell (WWSeparate)
+@implementation UIView (WWSeparate)
 static char HCBlineView;
 static char HCBconstraintLeft;
 
-- (void)ww_setupBottomLineViewWithLeftMargin:(CGFloat)leftMargin {
+- (void)ww_setBottomLineViewWithLeftMargin:(CGFloat)leftMargin {
+    UIView *selfView = self;
+    if ([self isKindOfClass:[UITableViewCell class]]) {
+        UITableViewCell *v = (UITableViewCell *)self;
+        selfView = v.contentView;
+    }else if ([self isKindOfClass:[UICollectionViewCell class]]) {
+        UICollectionViewCell *v = (UICollectionViewCell *)self;
+        selfView = v.contentView;
+    }
     
-    if (![self.contentView.subviews containsObject:self.lineView]) {
+    if (![selfView.subviews containsObject:self.lineView]) {
         UIView *lineView = [[UIView alloc]init];
         self.lineView = lineView;
-        [self.contentView addSubview:lineView];
+        [selfView addSubview:lineView];
         lineView.backgroundColor = [UIColor darkGrayColor];
         lineView.translatesAutoresizingMaskIntoConstraints = NO;
         
-        NSLayoutConstraint *constraintRight = [NSLayoutConstraint constraintWithItem:lineView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
-        NSLayoutConstraint *constraintBottom = [NSLayoutConstraint constraintWithItem:lineView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+        NSLayoutConstraint *constraintRight = [NSLayoutConstraint constraintWithItem:lineView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:selfView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
+        NSLayoutConstraint *constraintBottom = [NSLayoutConstraint constraintWithItem:lineView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:selfView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
         NSLayoutConstraint *constraintHeight = [NSLayoutConstraint constraintWithItem:lineView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.5];
         
-        [self.contentView addConstraint:constraintRight];
-        [self.contentView addConstraint:constraintBottom];
-        [self.contentView addConstraint:constraintHeight];
+        [selfView addConstraint:constraintRight];
+        [selfView addConstraint:constraintBottom];
+        [selfView addConstraint:constraintHeight];
     }
     
-    [self.contentView removeConstraint:self.constraintLeft];
-    self.constraintLeft = [NSLayoutConstraint constraintWithItem:self.lineView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:leftMargin];
-    [self.contentView addConstraint:self.constraintLeft];
+    [selfView removeConstraint:self.constraintLeft];
+    self.constraintLeft = [NSLayoutConstraint constraintWithItem:self.lineView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:selfView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:leftMargin];
+    [selfView addConstraint:self.constraintLeft];
 }
 
 - (UIView *)lineView {
@@ -57,5 +65,6 @@ static char HCBconstraintLeft;
 - (void)setConstraintLeft:(NSLayoutConstraint *)constraintLeft {
     objc_setAssociatedObject(self, &HCBconstraintLeft, constraintLeft, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 
 @end

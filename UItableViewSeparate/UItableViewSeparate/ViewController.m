@@ -11,6 +11,7 @@
 
 @interface ViewController ()<UITabBarDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIView *redView;
 
 @end
 
@@ -18,13 +19,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self.redView ww_setBottomLineViewWithLeftMargin:0];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 10;
+    return 100;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -41,7 +42,7 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%zd组--%zd行",indexPath.section,indexPath.row];
     //控制不同行的间距
     CGFloat leftMargin = indexPath.row % 2 ? 0 :10;
-    [cell ww_setupBottomLineViewWithLeftMargin:leftMargin];
+    [cell ww_setBottomLineViewWithLeftMargin:leftMargin];
     
     return cell;
 }
