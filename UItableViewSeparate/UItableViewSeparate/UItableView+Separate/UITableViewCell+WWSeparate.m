@@ -10,14 +10,11 @@
 #import <objc/runtime.h>
 
 @interface UIView()
-@property (nonatomic, weak) UIView *lineView;
 @property (nonatomic, strong) NSLayoutConstraint *constraintLeft;
 @end
 
 
 @implementation UIView (WWSeparate)
-static char HCBlineView;
-static char HCBconstraintLeft;
 
 - (void)ww_setBottomLineViewWithLeftMargin:(CGFloat)leftMargin {
     UIView *selfView = self;
@@ -29,9 +26,9 @@ static char HCBconstraintLeft;
         selfView = v.contentView;
     }
     
-    if (![selfView.subviews containsObject:self.lineView]) {
+    if (![selfView.subviews containsObject:self.ww_lineView]) {
         UIView *lineView = [[UIView alloc]init];
-        self.lineView = lineView;
+        self.ww_lineView = lineView;
         [selfView addSubview:lineView];
         lineView.backgroundColor = [UIColor darkGrayColor];
         lineView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -46,24 +43,24 @@ static char HCBconstraintLeft;
     }
     
     [selfView removeConstraint:self.constraintLeft];
-    self.constraintLeft = [NSLayoutConstraint constraintWithItem:self.lineView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:selfView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:leftMargin];
+    self.constraintLeft = [NSLayoutConstraint constraintWithItem:self.ww_lineView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:selfView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:leftMargin];
     [selfView addConstraint:self.constraintLeft];
 }
 
-- (UIView *)lineView {
-    return objc_getAssociatedObject(self, &HCBlineView);
+- (UIView *)ww_lineView {
+    return objc_getAssociatedObject(self, @selector(ww_lineView));
 }
 
-- (void)setLineView:(UIView *)lineView {
-    objc_setAssociatedObject(self, &HCBlineView, lineView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setWw_lineView:(UIView *)ww_lineView {
+    objc_setAssociatedObject(self, @selector(ww_lineView), ww_lineView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSLayoutConstraint *)constraintLeft {
-    return objc_getAssociatedObject(self, &HCBconstraintLeft);
+    return objc_getAssociatedObject(self, @selector(constraintLeft));
 }
 
 - (void)setConstraintLeft:(NSLayoutConstraint *)constraintLeft {
-    objc_setAssociatedObject(self, &HCBconstraintLeft, constraintLeft, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(constraintLeft), constraintLeft, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 

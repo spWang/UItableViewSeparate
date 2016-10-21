@@ -21,6 +21,13 @@
     [super viewDidLoad];
     [self.redView ww_setBottomLineViewWithLeftMargin:0];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    // 设置毛玻璃
+//    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+//    UIVibrancyEffect *vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:blurEffect];
+//    self.tableView.separatorEffect = vibrancyEffect;
+    
+    self.tableView.tableFooterView = [[UIView alloc] init];
+    //self.tableView.separatorInset = UIEdgeInsetsMake(0, 100, 0, 0);
 }
 
 #pragma mark - UITableViewDataSource
